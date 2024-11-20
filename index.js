@@ -2,6 +2,9 @@ import { ApolloServer, gql } from "apollo-server";
 import { ApolloServerPluginLandingPageGraphQLPlayground } from "apollo-server-core";
 import mongoose from "mongoose";
 
+import { makeExecutableSchema } from '@graphql-tools/schema';
+import { constraintDirective, constraintDirectiveTypeDefs } from 'graphql-constraint-directive';
+
 import typeDefs from "./graphql/auth/typedefs.js";
 
 import dotenv from "dotenv";
@@ -23,9 +26,14 @@ mongoose.connection.on("error", (err) => {
   console.log("error : ", err);
 });
 
-const server = new ApolloServer({
-  typeDefs,
+let schema = makeExecutableSchema({
+  typeDefs: [constraintDirectiveTypeDefs, typeDefs],
   resolvers,
+})
+schema = constraintDirective()(schema)
+
+const server = new ApolloServer({
+  schema,
   plugins: [ApolloServerPluginLandingPageGraphQLPlayground()]
 });
 
