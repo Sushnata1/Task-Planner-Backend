@@ -16,13 +16,15 @@ const ProfileSchema = new mongoose.Schema({
         default: Date.now(),
     },
     //Date actually stores timestamp
-    day_start_time: {
-        type: Date,
-        required: true,
-    },
-    day_end_time: {
-        type: Date,
-        required: true,
+    working_hours : {
+        day_start_time: {
+            type: Date,
+            required: true,
+        },
+        day_end_time: {
+            type: Date,
+            required: true,
+        }
     },
     dp: { 
         type: Buffer, 

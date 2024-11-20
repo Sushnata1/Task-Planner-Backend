@@ -4,6 +4,7 @@ import mongoose from "mongoose";
 
 import { makeExecutableSchema } from '@graphql-tools/schema';
 import { constraintDirective, constraintDirectiveTypeDefs } from 'graphql-constraint-directive';
+import { typeDefs as scalarTypeDefs, resolvers as scalarResolvers } from 'graphql-scalars';
 
 import typeDefs from "./graphql/auth/typedefs.js";
 
@@ -16,6 +17,8 @@ import './data_models/Test.js';
 
 import resolvers from "./graphql/auth/resolvers.js";
 
+console.log("🚀 Connecting to mongodb");
+
 mongoose.connect(config['DB_URI']);
 
 mongoose.connection.on("connected", () => {
@@ -27,8 +30,11 @@ mongoose.connection.on("error", (err) => {
 });
 
 let schema = makeExecutableSchema({
-  typeDefs: [constraintDirectiveTypeDefs, typeDefs],
-  resolvers,
+  typeDefs: [...scalarTypeDefs, constraintDirectiveTypeDefs, typeDefs],
+  resolvers: {
+    ... scalarResolvers,
+    ... resolvers,
+  },
 })
 schema = constraintDirective()(schema)
 

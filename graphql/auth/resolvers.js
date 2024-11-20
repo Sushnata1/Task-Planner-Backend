@@ -12,6 +12,10 @@ export default {
     set: async (_,{u,p}) => {
       const newTest = new Profiles({username:u,password:p});
       return await newTest.save();
+    },
+    registerProfile: async (_,{profile}) => {
+      console.log(profile);
+      return JSON.stringify(profile);
     }
   }
 }
